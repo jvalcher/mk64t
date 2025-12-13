@@ -6,7 +6,7 @@
 #include <string.h>
 #include <libgen.h>
 
-#include "../inc/utils.h"
+#include "utils.h"
 
 
 

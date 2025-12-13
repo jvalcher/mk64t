@@ -1,4 +1,7 @@
 obj/test/*
 obj/prod/*
+src/utils/obj/test/*
+src/utils/obj/prod/*
+
 bin/mk64tt_dev
 bin/mk64tt

@@ -1,21 +1,23 @@
 #
 # src/Makefile
 #
+cc := gcc
+cflags := -Wall -Wextra -I../../inc
 
-MAKEFLAGS += --no-print-directory
-
-bin_dir = ../bin
-obj_dir = ../obj
-test_obj_dir = $(obj_dir)/test
-
-cc = gcc
-cflags = -Wall -Wextra
-build = $(cc) $(cflags) -c
-test_build = $(build) -g
-
+test_objs_dir := ../obj/test
+utils_srcs := $(wildcard utils/*.c)
 
 #
-# Build object files
+# mupen64plus
 #
-test_utils: utils.c
-	@$(test_build) $^ -o $(test_obj_dir)/utils.o
+test_build_mupen64plus: $(test_objs_dir)/mupen64plus.o
+
+$(test_objs_dir)/mupen64plus.o: mupen64plus.c
+	$(cc) $(cflags) -g -c $< -o $@
+
+#
+# utils/
+#
+test_build_utils: $(utils_srcs)
+	make -C utils test_utils
+
