@@ -1,6 +1,6 @@
 
 # mk64tt
 
-Run Mario Kart 64 time trials on `mupen64plus` with personal and world-record ghosts
+A `mupen64plus` interface for easily managing and playing against your own and recording-holding players' time trial ghosts in Mario Kart 64
 
-Under construction...
+__Under construction...__
