@@ -2,7 +2,7 @@
 
 #
 # Process dex file
-#
+# -------
 # Usage: 
 #   ./process LR_3lap   (no extension)
 #
@@ -21,7 +21,7 @@ MUP_MPK="${mpk_file##*/}"
 }
 
 printf "Converting dex/$1.dex to mpk/$1.mpk... "
-dex_to_mpk dex/$1.dex mpk/$1.mpk
+./dex_to_mpk dex/$1.dex mpk/$1.mpk
 printf "done\n"
 
 printf "Copying mpk/$1.mpk to save/\"$MUP_MPK\"... "

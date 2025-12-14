@@ -5,7 +5,8 @@ src/utils/obj/prod/*
 
 bin/mk64tt_dev
 bin/mk64tt
-test/test/
+test/test/*
 
+data/ghost/dex_to_mpk
 data/ghost/config/*
 data/ghost/save/*

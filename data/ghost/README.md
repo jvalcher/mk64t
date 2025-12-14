@@ -16,12 +16,14 @@ Each ghost's info is stored in `info.csv`.
 
 ## Updating a dex file
 
+Note, the following process is Linux-based, making use of several `bash` scripts that launch mupen64plus. 
+
 First, edit the new ghost's respective entry in `info.csv`.
 
-Next, replace the corresponding old dex file in `dex/` with the updated dex file. Note that you cannot create a new dex file category, as this would require changes to the code base.
+Next, replace the corresponding old dex file in `dex/` with the updated dex file. You cannot create a new dex file category, as this would require changes to the code base. Also, dex files from the MK64 Ghost Database usually end with `.n64` not `.dex`. Renaming them will not affect the following process.
 
 
-### Creating, processing an mpk file
+### How mupen64plus stores data
 
 Before proceeding, it will be helpful to understand a little bit about the files that mupen64plus uses to save its data.
 
@@ -35,7 +37,10 @@ Mario Kart 64 (U) [!]-3A67D998.mpk
 ```
 These values for your ROM can be found in mupen64plus' terminal output.
 
-Now open `rom` and set the `bash` variable `ROM`, which will be used by all of the following scripts, to your MK64 ROM's path.
+
+### Creating, processing an mpk file
+
+Open `rom` and set the `bash` variable `ROM`, which will be used by all of the following scripts, to your MK64 ROM's path.
 
 ```bash
 vim rom
@@ -51,13 +56,11 @@ In order for mupen64plus to use a new mpk file, it must be renamed in the above 
 ls save   # verify presence of mpk,eep files
 ```
 
-Now we can begin the dex-to-mpk conversion and ghost processing using the `process` script. You must first build the `src/sa_tool/dex_to_mpk.c` tool and put the resulting `dex_to_mpk` binary in your path. 
+Now we can begin the dex-to-mpk conversion and ghost processing using the `process` script. You must first build the `src/sa_tool/dex_to_mpk.c` tool, which will be put in this directory. 
 
 ```bash
 cd src/sa_tool
 make dex_to_mpk
-cd ../../bin
-cp dex_to_mpk $HOME/.local/bin  # or wherever
 ```
 
 Now run the `process` script, which will:
