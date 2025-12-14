@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Start mupen64plus in order to generate tmp/file.mpk to be used by `./process`
+# Start mupen64plus in order to generate save/file.mpk to be used by `./process`
 #
 source rom
 
