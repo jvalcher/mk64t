@@ -16,19 +16,21 @@
 #define LOG_DIR_MODE   0700
 #define LOG_FILE_MODE  "w"
 
+char *log_file_path = NULL;
 FILE *log_file_stream = NULL;
 
 
 int close_log_stream(void)
 {
-    int ret;
-
     errno = 0;
-    ret = fclose(log_file_stream);
-    if (ret == EOF) {
+    if (fclose(log_file_stream) == EOF) {
         fprintf(stderr, "Failed to close log file: %s\n", strerror(errno));
         return -1;
     }
+    log_file_stream = NULL;
+
+    free(log_file_path);
+    log_file_path = NULL;
 
     return 0;
 }
@@ -54,8 +56,21 @@ static int open_log_file(const char *log_path)
 
 int init_log_stream(const char *log_path)
 {
-    if (open_log_file(log_path) == -1)
+    if (log_path == NULL)
+        log_file_path = concat_strs(getenv("HOME"), LOG_DEFAULT_PATH);
+    else
+        log_file_path = strdup(log_path);
+
+    if (open_log_file(log_file_path) == -1) {
+        free(log_file_path);
         return -1;
+    }
 
     return 0;
 }
+
+void print_see_log_msg(void)
+{
+    fprintf(stderr, "See log file for more information: %s\n", log_file_path);
+}
+

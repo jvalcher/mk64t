@@ -1,23 +1,23 @@
 #
 # src/Makefile
 #
+ext := c
 cc := gcc
-cflags := -Wall -Wextra -I../../inc
+cflags := -Wall -Wextra
+cflags_dev := -g3
+cflags_prod := -O2
 
-test_objs_dir := ../obj/test
-utils_srcs := $(wildcard utils/*.c)
+build_targs :=
+clean_targs :=
 
-#
-# mupen64plus
-#
-test_build_mupen64plus: $(test_objs_dir)/mupen64plus.o
+include ../Makesuite.mk
 
-$(test_objs_dir)/mupen64plus.o: mupen64plus.c
-	$(cc) $(cflags) -g -c $< -o $@
+$(eval $(call BUILD_SRC,mupen64plus,$(build)))
 
-#
-# utils/
-#
-test_build_utils: $(utils_srcs)
-	make -C utils test_utils
+$(eval $(call BUILD_DIR,ghost_data,$(build)))
+$(eval $(call BUILD_DIR,utils,$(build)))
+
+.PHONY: all clean
+all: $(build_targs)
+clean: $(clean_targs)
 

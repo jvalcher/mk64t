@@ -1,37 +1,28 @@
 #
 # test/Makefile
 #
+ext := c
 cc := gcc
-cflags := -g -Wall -Wextra -I../inc
+cflags := -g3 -Wall -Wextra
 
-src_dir := ../src
-test_bin_dir := ../bin/test
-test_obj_dir := ../obj/test
-utils_srcs := $(wildcard $(src_dir)/utils/*c)
+test_targs :=
+test_clean_targs :=
+build_targs :=
+clean_targs :=
 
+mupen64plus_mod_deps := utils
+mupen64plus_test_deps := misc_test_utils
+ghost_data_mod_deps := utils
 
-all: \
-	test_mupen64plus \
-	test_utils
+include ../Makesuite.mk
 
-#
-# mupen64plus
-#
-test_mupen64plus: test_mupen64plus.c \
-				  $(test_obj_dir)/utils.o \
-				  $(test_obj_dir)/mupen64plus.o
-	$(cc) $(cflags) $^ -o $(test_bin_dir)/test_mupen64plus
-	./$(test_bin_dir)/test_mupen64plus
+$(eval $(call TEST_MODULE,mupen64plus,$(build)))
+$(eval $(call TEST_MODULE,ghost_data,$(build)))
 
-$(test_obj_dir)/mupen64plus.o: $(src_dir)/mupen64plus.c
-	make -C $(src_dir) test_build_mupen64plus
+$(eval $(call BUILD_DIR,misc_test_utils,test))
 
-#
-# utils
-#
-test_utils: test_utils.c $(test_obj_dir)/utils.o
-	$(cc) $(cflags) $^ -o $(test_bin_dir)/test_utils
-	./$(test_bin_dir)/test_utils
-
-$(test_obj_dir)/utils.o: $(utils_srcs)
-	make -C $(src_dir) test_build_utils
+.PHONY: run_all clean_bins build_mods clean_mods
+run_all: $(test_targs)
+clean_bins: $(test_clean_targs)
+build_mods: $(build_targs)
+clean_mods: $(clean_targs)

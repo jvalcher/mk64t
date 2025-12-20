@@ -1,12 +1,12 @@
-obj/test/*
-obj/prod/*
-src/utils/obj/test/*
-src/utils/obj/prod/*
 
-bin/mk64tt_dev
-bin/mk64tt
-test/test/*
+bin/mk64tt*
+bin/test/*
 
 data/ghost/dex_to_mpk
 data/ghost/config/*
 data/ghost/save/*
+
+src/ghost_data_tmp
+
+*.o
+

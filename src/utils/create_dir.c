@@ -25,8 +25,7 @@ int create_dir(const char *dir_path, int mode)
         return 0;
     }
     if (errno != ENOENT) {
-        fprintf(stderr, "Unable to open directory \"%s\": %s\n", 
-                dir_path, strerror(errno));
+        _logpe("opendir failed on directory \"%s\"", dir_path);
         return -1;
     }
 
@@ -45,8 +44,7 @@ int create_dir(const char *dir_path, int mode)
     errno = 0;
     rv = mkdir(dir_path, mode);
     if (rv == -1) {
-        fprintf(stderr, "Unable to create directory \"%s\": %s\n", 
-                dir_path, strerror(errno));
+        _logpe("mkdir failed to create directory \"%s\"", dir_path);
         return -1;
     }
 

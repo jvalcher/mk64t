@@ -7,7 +7,7 @@
 #include "utils.h"
 
 
-char* concat_strings_impl(int max_strs, ...)
+char* concat_strs_impl(int max_strs, ...)
 {
     int str_len;
     int str_count;
@@ -25,7 +25,7 @@ char* concat_strings_impl(int max_strs, ...)
     {
         str_len += strlen(str);
         if (++str_count >= max_strs) {
-            fprintf(stderr, "Max strings (%d) exceeded", max_strs);
+            _logp("Max strings (%d) exceeded", max_strs);
             return NULL;
         }
     }
@@ -35,7 +35,7 @@ char* concat_strings_impl(int max_strs, ...)
     errno = 0;
     str = malloc(str_len + 1);
     if (str == NULL) {
-        perror("string malloc failed");
+        _logpe("String malloc failed");
         return NULL;
     }
     str [0] = '\0';
