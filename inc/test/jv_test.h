@@ -1,52 +1,32 @@
 /*
-    -----------------
-     Testing library
-    -----------------
-    Author: jvalcher
+-----------------
+Description: Single-header testing library
+Author:      jvalcher
+License:     MIT
+-----------------
+- Optional, formatted fail messages
+- Colored output for easy review
+- exit(1) on failure within test group/function
 
-    - Single header library
-    - Formatted failure messages
-        test_strs_eq (str1, str2 "\'%s\' is not equal to \'%s\'", str1, str2);
-        test_strs_eq (str1, str2, " ");     // single space for no message
-    - Test functions
-        test_init       - Set passed, failed variables to 0
-                        - Print test header with current file and function
-        test_cond       - Conditional statement
-        test_strs_eq    - Strings are equal
-        test_strs_neq   - Strings are not equal
-        test_results    - Print test results
-    - Misc utility functions
-        rand_string(x,y)    - Generate randome string between x and y length
-                            - Caller must free string
+- Example usage:
 
-    - Example usage of test functions:
-        ------- tests.c -------
-        #include "tests.h"
-        #include "jv_test.h"
-        void run_tests_01 ()
-        {
-            test_init();
-            test_cond     (x > 5, "Test failed: \'%d\' is not greater than 5", x);
-            test_strs_eq  (str1, str2, "\"%s\" not equal to \"%s\"", str1, str2);
-            test_strs_neq (str2, str3, " ");
-            test_results();
-        }
-        ------- main.c -------
-        #include "tests.h"
-        #include "jv_test.h"
-        int passed = 0,
-            failed = 0;
-        int main () {
-            run_tests_01();
-            return 0;
-        }
-    - Output:
-        ---------------------
-        ./tests.c :: run_tests_01()
-        ---------------------
-            FAIL  (x > 5) Line 25  Test failed: '4' is not greater than 5
-            FAIL  (str2 != str3)  Line 27
-        Passed: 1,  Failed: 2
+    #include "jv_test.h"
+
+    void run_tests_01(void) {
+        test_init();
+
+        test_cond     (x > 5, "%d is not greater than 5", x);
+        test_strs_eq  (str1, str2, "\"%s\" not equal to \"%s\"", str1, str2);
+        test_strs_neq (str2, str3);
+
+        test_results();
+    }
+
+    int main(void) {
+        run_tests_01();
+
+        return 0;
+    }
 */
 #ifndef JV_TEST_H
 #define JV_TEST_H
@@ -55,46 +35,47 @@
 #include <stdio.h>
 #include <string.h>
 
-#define R         "\033[1;0m"         // reset to default
+#define R         "\033[1;0m"  // reset to default
 #define RED       "\033[1;31m"
 #define CYAN      "\033[1;36m"
 #define GREEN     "\033[1;32m"
 #define YELLOW    "\033[1;33m"
 #define PURPLE    "\033[1;35m"
-#define TEST_DIV  "---------------------\n"
+#define TEST_DIV      "---------------------"
+#define TEST_OUT_DIV  "------Output---------"
 
-static const char charset[] =
-    "abcdefghijklmnopqrstuvwxyz"
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    "0123456789";
+int passed;
+int failed;
 
-// Initialize once in main() file
-extern int passed;
-extern int failed;
+
 
 /*
-    Reset statistics; print function and file header
+    Reset statistics, print function and file header
     --------
-    - Run at start of every test function
+    - Run at start of every set of tests
 */
-#define test_init() do { \
+#define test_init() \
+do { \
     passed = 0; \
     failed = 0; \
-    printf (TEST_DIV CYAN "%s" R " :: " PURPLE "%s" R "()\n" TEST_DIV, \
+    printf (TEST_DIV CYAN "\n%s" R " :: " PURPLE "%s" R "()\n" TEST_OUT_DIV "\n", \
             __FILE__, __func__ \
     ); \
 } while (0)
 
 /*
-    Print test statistics
+    Print test results
     --------
     - Run at the end of every test function
 */
-#define test_results() do { \
+#define test_results() \
+do { \
     printf (\
-        "Passed: " GREEN "%d" R ",  Failed: " RED "%d\n" R "\n", \
+        TEST_DIV "\nPassed: " GREEN "%d" R ",  Failed: " RED "%d\n" R "\n", \
         passed, failed \
     ); \
+    if (failed > 0) \
+        exit(1); \
 } while (0)
 
 /*
@@ -107,22 +88,23 @@ extern int failed;
         - Custom error message
     - Printed between test_init() and test_results() output
 */
-#define print_test_failed(...) do { \
+#define print_test_failed(...) \
+do { \
     printf (CYAN "  Line " YELLOW "%d" R "  ", __LINE__); \
-    printf (__VA_ARGS__); \
+    __VA_OPT__(printf (__VA_ARGS__)); \
     printf ("\n"); \
 } while (0)
 
 /****************
   Test functions
  ****************/
-
 #define FAIL printf("    " RED "FAIL" R "  ")
 
 /*
     Test conditional statement
 */
-#define test_cond(condition, ...) do { \
+#define test_cond(condition, ...) \
+do { \
     if (!(condition)) { \
         FAIL; \
         printf("(%s)", #condition); \
@@ -136,7 +118,8 @@ extern int failed;
 /*
     Test if strings equal
 */
-#define test_strs_eq(str1, str2, ...) do { \
+#define test_strs_eq(str1, str2, ...) \
+do { \
     if (strcmp((str1), (str2)) != 0) { \
         FAIL; \
         printf("(\"%s\" == \"%s\")", #str1, #str2); \
@@ -156,7 +139,6 @@ do { \
         FAIL; \
         printf("(\"%s\" != \"%s\")", #str1, #str2); \
         print_test_failed(__VA_ARGS__); \
-        ++failed; \
     } else { \
         ++passed; \
     } \
