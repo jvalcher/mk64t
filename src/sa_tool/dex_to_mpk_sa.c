@@ -19,13 +19,13 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    FILE *in = fopen(argv[1], "rb");
+    FILE *in = fopen(argv[1], "r");
     if (!in) {
         perror("fopen input");
         return 1;
     }
 
-    FILE *out = fopen(argv[2], "wb");
+    FILE *out = fopen(argv[2], "w+");
     if (!out) {
         perror("fopen output");
         fclose(in);
@@ -41,22 +41,20 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    long data_size = size - DEX_HEADER_SIZE;
-
     unsigned char *buf = calloc(1, MPK_SIZE);
     if (!buf) {
         perror("calloc");
         return 1;
     }
 
-    // Read whatever data exists after header
+    // Copy data after header
     fseek(in, DEX_HEADER_SIZE, SEEK_SET);
-    fread(buf, 1, data_size, in);
-
+    fread(buf, 1, MPK_SIZE, in);
     fwrite(buf, 1, MPK_SIZE, out);
 
     free(buf);
     fclose(in);
     fclose(out);
+
     return 0;
 }
