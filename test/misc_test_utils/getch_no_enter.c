@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 
-int get_ch_no_enter(void)
+int getch_no_enter(void)
 {
   int ch;
   struct termios oldt, newt;

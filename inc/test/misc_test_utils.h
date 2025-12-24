@@ -1,6 +1,8 @@
 #ifndef _TEST_UTILS_H
 #define _TEST_UTILS_H
 
+#include <stdbool.h>
+
 
 
 /*
@@ -8,7 +10,7 @@
     ---------
     - Pause execution
 */
-int get_ch_no_enter(void);
+int getch_no_enter(void);
 
 
 
