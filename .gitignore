@@ -10,3 +10,5 @@ src/rec_dex/dex_*.c
 
 *.o
 *.d
+
+tags
